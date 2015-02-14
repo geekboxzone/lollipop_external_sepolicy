@@ -36,6 +36,7 @@
 # level may be used to specify a fixed level for any UID.
 #
 isSystemServer=true domain=system_server
+user=cts seinfo=* name=roidJUnitRunner domain=ctsrunner_app type=app_data_file
 user=system domain=system_app type=system_app_data_file
 user=bluetooth domain=bluetooth type=bluetooth_data_file
 user=nfc domain=nfc type=nfc_data_file
