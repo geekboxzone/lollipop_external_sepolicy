@@ -108,6 +108,8 @@ allow init self:udp_socket { create ioctl };
 # set scheduling parameters for a kernel domain task.
 allow init kernel:process setsched;
 
+allow init self:packet_socket { create ioctl bind read write };
+
 ###
 ### neverallow rules
 ###

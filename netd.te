@@ -54,6 +54,12 @@ allow netd net_data_file:dir rw_dir_perms;
 domain_auto_trans(netd, hostapd_exec, hostapd)
 allow netd hostapd:process signal;
 
+domain_auto_trans(netd, hostapd_rtl_exec, hostapd_rtl)
+allow netd hostapd_rtl:process signal;
+
+domain_auto_trans(netd, hostapd_esp_exec, hostapd_esp)
+allow netd hostapd_esp:process signal;
+
 # Allow netd to spawn dnsmasq in it's own domain
 domain_auto_trans(netd, dnsmasq_exec, dnsmasq)
 allow netd dnsmasq:process signal;

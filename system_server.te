@@ -350,6 +350,9 @@ selinux_manage_policy(system_server)
 # (urge is to deprecate this long term)
 allow system_server zygote:unix_dgram_socket write;
 
+# for /dev/socket/wpa_wlan0
+allow system_server init:unix_dgram_socket sendto;
+
 # Read from log daemon.
 read_logd(system_server)
 
