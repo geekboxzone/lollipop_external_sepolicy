@@ -1,0 +1,6 @@
+type setup_fs_nvm, domain;
+
+type setup_fs_nvm_exec, exec_type, file_type;
+
+init_daemon_domain(setup_fs_nvm)
+

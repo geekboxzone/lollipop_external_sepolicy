@@ -227,7 +227,7 @@ neverallow { appdomain -bluetooth } hci_attach_dev:chr_file
 neverallow appdomain tee_device:chr_file { read write };
 
 # Privileged netlink socket interfaces.
-neverallow appdomain
+neverallow { appdomain -bluetooth }
     self:{
         netlink_socket
         netlink_firewall_socket
@@ -245,7 +245,7 @@ neverallow appdomain
 neverallow appdomain self:netlink_kobject_uevent_socket { write append };
 
 # Sockets under /dev/socket that are not specifically typed.
-neverallow appdomain socket_device:sock_file write;
+neverallow { appdomain -radio } socket_device:sock_file write;
 
 # Unix domain sockets.
 neverallow appdomain adbd_socket:sock_file write;

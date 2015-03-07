@@ -171,7 +171,7 @@ neverallow { domain -unconfineddomain -recovery -busybox } unlabeled:dir_file_cl
 
 # Limit ability to ptrace or read sensitive /proc/pid files of processes
 # with other UIDs to these whitelisted domains.
-neverallow { domain -debuggerd -vold -dumpstate -system_server } self:capability sys_ptrace;
+neverallow { domain -debuggerd -vold -dumpstate -system_server -crashlogd } self:capability sys_ptrace;
 
 # Limit device node creation to these whitelisted domains.
 neverallow { domain -kernel -init -recovery -busybox -ueventd -watchdogd -healthd -vold -uncrypt } self:capability mknod;
@@ -250,7 +250,7 @@ neverallow domain init:binder call;
 
 # Don't allow raw read/write/open access to block_device
 # Rather force a relabel to a more specific type
-neverallow { domain -kernel -init -recovery -busybox -vold -uncrypt -install_recovery } block_device:blk_file { open read write };
+neverallow { domain -kernel -init -recovery -busybox -vold -uncrypt -install_recovery -init_shell -setup_fs_nvm -rpcServer} block_device:blk_file { open read write };
 
 # Don't allow raw read/write/open access to generic devices.
 # Rather force a relabel to a more specific type.
@@ -260,7 +260,7 @@ neverallow { domain -unconfineddomain -ueventd -recovery -busybox } device:chr_f
 # Limit what domains can mount filesystems or change their mount flags.
 # sdcard_type / vfat is exempt as a larger set of domains need
 # this capability, including device-specific domains.
-neverallow { domain -kernel -init -recovery -busybox -vold -zygote } { fs_type -sdcard_type }:filesystem { mount remount relabelfrom relabelto };
+neverallow { domain -kernel -init -recovery -busybox -vold -zygote -init_shell -setup_fs_nvm} { fs_type -sdcard_type }:filesystem { mount remount relabelfrom relabelto };
 
 #
 # Assert that, to the extent possible, we're not loading executable content from
@@ -287,7 +287,7 @@ neverallow { domain -init } property_data_file:dir { create setattr relabelfrom 
 neverallow { domain -init } property_data_file:file { create setattr relabelfrom write append unlink link rename };
 
 # Only recovery should be doing writes to /system
-neverallow { domain -recovery -busybox } { system_file exec_type }:dir_file_class_set
+neverallow { domain -recovery -busybox -init_shell } { system_file exec_type }:dir_file_class_set
     { create write setattr relabelfrom relabelto append unlink link rename };
 
 # Nothing should be writing to files in the rootfs.

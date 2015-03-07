@@ -1,0 +1,4 @@
+type nvm_uagent, domain;
+type nvm_uagent_exec, exec_type, file_type;
+init_daemon_domain(nvm_uagent)
+
