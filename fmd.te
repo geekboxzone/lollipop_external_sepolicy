@@ -1,5 +1,0 @@
-type fmd, domain;
-type fmd_exec, exec_type, file_type;
-
-init_daemon_domain(fmd)
-

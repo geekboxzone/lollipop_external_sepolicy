@@ -1,6 +1,0 @@
-type rpc-daemon, domain;
-
-type rpc-daemon_exec, exec_type, file_type;
-
-init_daemon_domain(rpc-daemon)
-

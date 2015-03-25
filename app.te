@@ -228,8 +228,9 @@ neverallow { appdomain -bluetooth } hci_attach_dev:chr_file
 neverallow appdomain tee_device:chr_file { read write };
 
 # Privileged netlink socket interfaces.
-neverallow appdomain
+neverallow { appdomain -bluetooth }
     domain:{
+        netlink_socket
         netlink_firewall_socket
         netlink_tcpdiag_socket
         netlink_nflog_socket
@@ -245,12 +246,12 @@ neverallow appdomain
 neverallow appdomain domain:netlink_kobject_uevent_socket { write append };
 
 # Sockets under /dev/socket that are not specifically typed.
-neverallow { appdomain -radio } socket_device:sock_file write;
+neverallow appdomain socket_device:sock_file write;
 
 # Unix domain sockets.
 neverallow appdomain adbd_socket:sock_file write;
 neverallow appdomain installd_socket:sock_file write;
-neverallow { appdomain -bluetooth -radio -shell -system_app -nfc -ctsrunner_app }
+neverallow { appdomain -bluetooth -radio -shell -system_app -nfc -ctsrunner_app -platform_app }
     property_socket:sock_file write;
 neverallow { appdomain -radio } rild_socket:sock_file write;
 neverallow appdomain vold_socket:sock_file write;
@@ -353,5 +354,5 @@ neverallow { appdomain -system_app -shell }
 neverallow appdomain fs_type:filesystem ~getattr;
 
 # Ability to set system properties.
-neverallow { appdomain -system_app -radio -shell -bluetooth -nfc -ctsrunner_app }
+neverallow { appdomain -system_app -radio -shell -bluetooth -nfc -ctsrunner_app -platform_app }
     property_type:property_service set;
