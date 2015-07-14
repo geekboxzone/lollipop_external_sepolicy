@@ -114,6 +114,7 @@ $(sepolicy_policy.conf) : $(call build_policy, $(sepolicy_build_files))
 	$(hide) m4 -D mls_num_sens=$(PRIVATE_MLS_SENS) -D mls_num_cats=$(PRIVATE_MLS_CATS) \
 		-D target_build_variant=$(TARGET_BUILD_VARIANT) \
 		-D force_permissive_to_unconfined=$(FORCE_PERMISSIVE_TO_UNCONFINED) \
+		-D target_normal_recovery=true \
 		-s $^ > $@
 	$(hide) sed '/dontaudit/d' $@ > $@.dontaudit
 
@@ -126,7 +127,39 @@ built_sepolicy := $(LOCAL_BUILT_MODULE)
 sepolicy_policy.conf :=
 
 ##################################
+ifeq ($(strip $(BUILD_WITH_USER_PTEST)),true)
 include $(CLEAR_VARS)
+
+LOCAL_MODULE := ptestsepolicy
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
+
+include $(BUILD_SYSTEM)/base_rules.mk
+
+ptestsepolicy_policy.conf := $(intermediates)/ptestpolicy.conf
+$(ptestsepolicy_policy.conf): PRIVATE_MLS_SENS := $(MLS_SENS)
+$(ptestsepolicy_policy.conf): PRIVATE_MLS_CATS := $(MLS_CATS)
+$(ptestsepolicy_policy.conf) : $(call build_policy, $(sepolicy_build_files))
+	@mkdir -p $(dir $@)
+	$(hide) m4 -D mls_num_sens=$(PRIVATE_MLS_SENS) -D mls_num_cats=$(PRIVATE_MLS_CATS) \
+		-D target_build_variant=$(TARGET_BUILD_VARIANT) \
+		-D force_permissive_to_unconfined=$(FORCE_PERMISSIVE_TO_UNCONFINED) \
+		-D target_ptest=true \
+		-s $^ > $@
+	$(hide) sed '/dontaudit/d' $@ > $@.dontaudit
+
+$(LOCAL_BUILT_MODULE) : $(ptestsepolicy_policy.conf) $(HOST_OUT_EXECUTABLES)/checkpolicy
+	@mkdir -p $(dir $@)
+	$(hide) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c $(POLICYVERS) -o $@ $<
+	$(hide) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c $(POLICYVERS) -o $(dir $<)/$(notdir $@).dontaudit $<.dontaudit
+
+built_sepolicy := $(LOCAL_BUILT_MODULE)
+ptestsepolicy_policy.conf :=
+endif
+##################################
+include $(CLEAR_VARS)
+
 
 LOCAL_MODULE := sepolicy.recovery
 LOCAL_MODULE_CLASS := ETC
@@ -143,6 +176,7 @@ $(sepolicy_policy_recovery.conf) : $(call build_policy, $(sepolicy_build_files))
 		-D target_build_variant=$(TARGET_BUILD_VARIANT) \
 		-D force_permissive_to_unconfined=$(FORCE_PERMISSIVE_TO_UNCONFINED) \
 		-D target_recovery=true \
+		-D target_normal_recovery=true \
 		-s $^ > $@
 
 $(LOCAL_BUILT_MODULE) : $(sepolicy_policy_recovery.conf) $(HOST_OUT_EXECUTABLES)/checkpolicy
