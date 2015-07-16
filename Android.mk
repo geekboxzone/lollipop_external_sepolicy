@@ -130,7 +130,7 @@ sepolicy_policy.conf :=
 ifeq ($(strip $(BUILD_WITH_USER_PTEST)),true)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := ptestsepolicy
+LOCAL_MODULE := sepolicy.ptest
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
