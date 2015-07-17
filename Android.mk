@@ -137,10 +137,10 @@ LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 
 include $(BUILD_SYSTEM)/base_rules.mk
 
-ptestsepolicy_policy.conf := $(intermediates)/ptestpolicy.conf
-$(ptestsepolicy_policy.conf): PRIVATE_MLS_SENS := $(MLS_SENS)
-$(ptestsepolicy_policy.conf): PRIVATE_MLS_CATS := $(MLS_CATS)
-$(ptestsepolicy_policy.conf) : $(call build_policy, $(sepolicy_build_files))
+sepolicy_policy_ptest.conf := $(intermediates)/policy_ptest.conf
+$(sepolicy_policy_ptest.conf): PRIVATE_MLS_SENS := $(MLS_SENS)
+$(sepolicy_policy_ptest.conf): PRIVATE_MLS_CATS := $(MLS_CATS)
+$(sepolicy_policy_ptest.conf) : $(call build_policy, $(sepolicy_build_files))
 	@mkdir -p $(dir $@)
 	$(hide) m4 -D mls_num_sens=$(PRIVATE_MLS_SENS) -D mls_num_cats=$(PRIVATE_MLS_CATS) \
 		-D target_build_variant=$(TARGET_BUILD_VARIANT) \
@@ -149,13 +149,13 @@ $(ptestsepolicy_policy.conf) : $(call build_policy, $(sepolicy_build_files))
 		-s $^ > $@
 	$(hide) sed '/dontaudit/d' $@ > $@.dontaudit
 
-$(LOCAL_BUILT_MODULE) : $(ptestsepolicy_policy.conf) $(HOST_OUT_EXECUTABLES)/checkpolicy
+$(LOCAL_BUILT_MODULE) : $(sepolicy_policy_ptest.conf) $(HOST_OUT_EXECUTABLES)/checkpolicy
 	@mkdir -p $(dir $@)
 	$(hide) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c $(POLICYVERS) -o $@ $<
 	$(hide) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c $(POLICYVERS) -o $(dir $<)/$(notdir $@).dontaudit $<.dontaudit
 
-built_sepolicy := $(LOCAL_BUILT_MODULE)
-ptestsepolicy_policy.conf :=
+built_sepolicy_ptest := $(LOCAL_BUILT_MODULE)
+sepolicy_policy_ptest.conf :=
 endif
 ##################################
 include $(CLEAR_VARS)
